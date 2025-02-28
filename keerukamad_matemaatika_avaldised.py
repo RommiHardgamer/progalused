@@ -1,27 +1,59 @@
-"""Math exercises vol2."""
-import math
+import random
+import time
 
-def time_converter(seconds: int) -> str:
-    """Convert time in seconds to hours and minutes."""
-    minutes = (seconds % 3600) // 60
-    hours = seconds // 3600
-    return f"{seconds} sekundit on {hours} tund(i) ja {minutes} minut(it)."
+# Mängija klass
+class Mängija:
+    def __init__(self, nimi):
+        self.nimi = nimi
+        self.raha = 1000  # Algrahaga
+        self.risk = 1  # Madal risk alguses
+        self.äri_tase = 1  # Äri tase alguses
 
+    def raha_pesemine(self):
+        """Simuleerib raha pesemist"""
+        print(f"{self.nimi} alustas raha pesemise protsessi.")
+        õnn = random.random()  # Õnne määr mängib suurt rolli
+        kui_õnnelik = self.risk * õnn
+        if kui_õnnelik > 0.5:
+            teenitud = random.randint(100, 500)  # Teenitud raha
+            self.raha += teenitud
+            print(f"Õnnestus raha pesta! Teenitud: {teenitud} EUR.")
+        else:
+            kaotus = random.randint(50, 200)
+            self.raha -= kaotus
+            print(f"Raha pesemine ei õnnestunud. Kaotus: {kaotus} EUR.")
+        
+    def äri_arenemine(self):
+        """Simuleerib äri arendamist"""
+        kasum = random.randint(100, 300)
+        self.raha += kasum
+        print(f"Äri kasvab! Teenitud tulu: {kasum} EUR.")
 
-def student_helper(angle: int) -> str:
-    """Return the sine and cosine of the given angle in degrees."""
-    sine = round(math.sin(math.radians(angle)), 1)
-    cosine = round(math.cos(math.radians(angle)), 1)
-    return f"Nurk: {angle}, siinus: {sine}, koosinus: {cosine}."
+    def politsei_ohud(self):
+        """Kontrollib, kas politsei avastab midagi"""
+        if random.random() < 0.1 * self.risk:  # Mida kõrgem risk, seda suurem tõenäosus
+            print("Politsei on avastanud kahtlase tegevuse!")
+            karistus = random.randint(100, 500)
+            self.raha -= karistus
+            print(f"Politsei trahv: {karistus} EUR.")
 
+# Mängu käivitamine
+def mäng():
+    nimi = input("Sisesta oma mängija nimi: ")
+    mängija = Mängija(nimi)
 
-def greetings(n: int) -> str:
-    """Return a string that contains "Hey" n times."""
-    lots_of_heys = "Hey"*n
-    return lots_of_heys
+    for päev in range(1, 11):  # Mäng kestab 10 päeva
+        print(f"\nPäev {päev}:")
+        print(f"Praegu on sul raha: {mängija.raha} EUR.")
+        
+        # Tegevuse valimine
+        tegevus = input("Kas soovid teha raha pesemist (1), arendada äri (2) või vaadata politsei olukorda (3)? ")
 
-
-def adding_numbers(num_a: int, num_b: int) -> str:
-    """Return given numbers added together as a string."""
-    string_numbers = str(num_a)+str(num_b)
-    return string_numbers
+        if tegevus == '1':
+            mängija.raha_pesemine()
+        elif tegevus == '2':
+            mängija.äri_arenemine()
+        elif tegevus == '3':
+            mängija.politsei_ohud()
+        else:
+            print("Vigane valik.")
